@@ -16,7 +16,7 @@ BEGIN
         print 'Loading CRM Tables';
         print '--------------------------------------------------------------------';
         set @start_time =GetDate()
-
+    
         print '<< Truncating table : bronze.crm_cust_info'
         TRUNCATE TABLE bronze.crm_cust_info
         
@@ -28,7 +28,7 @@ BEGIN
             FIELDTERMINATOR= ','
         )
         set @end_time =GetDate()
-        print '>>Load Duration :' +cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'
+        print '>>Load Duration :' + cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'
         
 
         set @start_time =GetDate()
@@ -43,7 +43,7 @@ BEGIN
             FIELDTERMINATOR= ','
         )
         set @end_time =GetDate()
-        print '>>Load Duration :' +cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'
+        print '>>Load Duration :' + cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'
 
 
 
@@ -63,7 +63,7 @@ BEGIN
             FIELDTERMINATOR= ','
         )
         set @end_time =GetDate()
-        print '>>Load Duration :' +cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'
+        print '>>Load Duration :' + cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'
     
 
         -- bulk insert the data for erp(source)
@@ -85,7 +85,7 @@ BEGIN
             FIELDTERMINATOR= ','
         )
         set @end_time =GetDate()
-        print '>>Load Duration :' +cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'    
+        print '>>Load Duration :' + cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'    
 
 
 
@@ -101,7 +101,7 @@ BEGIN
             FIELDTERMINATOR= ','
         )
         set @end_time =GetDate()
-        print '>>Load Duration :' +cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'   
+        print '>>Load Duration :' + cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'   
     
 
 
@@ -119,18 +119,26 @@ BEGIN
         )
         set @end_time =GetDate()
 
-        print '>>Load Duration :' +cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'   
+        print '>>Load Duration :' + cast (DateDiff(second,@start_time,@end_time)as NVARCHAR) +' seconds'   
         set @end_batch_time =GetDate()
         print'========================================================================='
         print ' Loading Completed successfully into the bronze layer'
         print'========================================================================='
 
-        print 'Batch Time (Bronze layer) :'+cast(DateDiff(second,@start_batch_time,@end_batch_time)as NVARCHAR)+ ' seconds'
+        print 'Batch Time (Bronze layer) :'+ cast(DateDiff(second,@start_batch_time,@end_batch_time)as NVARCHAR)+ ' seconds'
         print'-------------------------------------------------------------------------------------------------'
     END TRY
 
     BEGIN CATCH
-        PRINT 'ERROR HAPPEND'
+        PRINT '=========================================='
+		PRINT 'ERROR OCCURED DURING LOADING BRONZE LAYER'
+		PRINT 'Error Message : ' + ERROR_MESSAGE();
+		PRINT 'Error Message : ' + CAST (ERROR_NUMBER() AS NVARCHAR);
+		PRINT 'Error Message : ' + CAST (ERROR_STATE() AS NVARCHAR);
+		PRINT '=========================================='
+
 
     END CATCH
 END; 
+GO
+EXEC  bronze.load_bronze
